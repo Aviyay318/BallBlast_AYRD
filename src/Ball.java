@@ -26,7 +26,7 @@ public class Ball {
     private BufferedImage ball;
 
     private JLabel numbers;
-    private Rectangle rectangle;
+    private Rectangle rectangleOfBall;
     private boolean isStart;
 
     public Ball(){
@@ -38,9 +38,9 @@ public class Ball {
         this.width = WIDTH_HEIGHT_DEFAULT;
         this.height = WIDTH_HEIGHT_DEFAULT;
 
+
         this.speed = 2;
         this.health = random.nextInt(1,30);
-        this.rectangle = new Rectangle(this.defaultXPosition,this.defaultYPosition,this.width,this.height);
 
         try {
             this.ball = ImageIO.read(new File("images/balls/red.png"));
@@ -48,10 +48,14 @@ public class Ball {
             throw new RuntimeException(e);
         }
 
+        this.rectangleOfBall = new Rectangle();
+
         this.moveThread = new Thread();
         this.moveThread.start();
         this.rectangleOfBall = new Rectangle(this.xPosition,this.yPosition,this.width,this.height);
     }
+
+
 
     private void createXPosition(){
         int state = random.nextInt(1,3);
@@ -116,15 +120,19 @@ public class Ball {
         }
     }
 
+    public Rectangle getRectangleOfBall(){
+        return this.rectangleOfBall;
+    }
     public void render(Graphics2D graphics2D, float interpolation){
-
         if (this.health!=0){
-            int xMovement =  ((int)((this.defaultXPosition + this.xPosition) + interpolation));
-            int yMovement = ((int) (this.defaultYPosition + this.yPosition+interpolation));
+            int xMovement = ((int)((this.defaultXPosition + this.xPosition)+interpolation));
+            int yMovement = ((int)((this.defaultYPosition + this.yPosition)+interpolation));
             graphics2D.drawImage(this.ball,xMovement-15, yMovement-68,this.width,this.height,null);
             graphics2D.setFont(new Font("arial",0,65));
             graphics2D.setColor(Color.white);
             graphics2D.drawString(Integer.toString((int)this.health),xMovement,yMovement);
+            this.rectangleOfBall.setBounds(this.xPosition,this.yPosition,this.width,this.height);
+
         }
     }
 

@@ -22,7 +22,6 @@ public class Instructions extends JPanel {
     private BufferedImage [] rightKey;
     private BufferedImage [] spaceKey;
 
-
     private KeyBoard keyboard;
     private JProgressBar jProgressBar;
     private int progressBarCounter;
@@ -52,7 +51,7 @@ public class Instructions extends JPanel {
         this.jProgressBar = new JProgressBar();
         this.progressBarCounter = 0;
         this.checkState = true;
-        checkIfStartInvoked();
+        //checkIfStartInvoked();
         this.setFocusable(true);
         this.requestFocus(true);
         this.addKeyListener(this.keyboard);
@@ -69,7 +68,6 @@ public class Instructions extends JPanel {
         this.add(this.blast, BorderLayout.CENTER);
         this.blast.setVisible(true);
         this.blast.setForeground(new Color(238,177,255));
-
 
         this.smallBlast = new JLabel("Blast",JLabel.CENTER);
         this.smallBlast.setBounds(this.blast.getX()+3,this.blast.getY()+3,280,100);
@@ -148,18 +146,19 @@ public class Instructions extends JPanel {
         }
     }
 
-    private void checkIfStartInvoked(){
-//        new Thread(()->{
-//            while (this.checkState){
-//                if (this.keyboard.isHide()){
-//                    addProgressBar();
-//                    fillProgressBar();
-//                    this.checkState = false;
-//                }
-//            }
-//        }).start();
+//    private void checkIfStartInvoked(){
+////        new Thread(()->{
+////            while (this.checkState){
+////                if (this.keyboard.isHide()){
+////                    addProgressBar();
+////                    fillProgressBar();
+////                    this.checkState = false;
+////                }
+////            }
+////        }).start();
+//
+//    }
 
-    }
     private void loadImages(){
         try {
             this.rightKey = new BufferedImage[]{ImageIO.read(new File("images/instructions/rightUnPressed.png")), ImageIO.read(new File("images/instructions/rightPressed.png"))};

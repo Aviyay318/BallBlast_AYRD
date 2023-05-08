@@ -23,6 +23,8 @@ public class Game extends JPanel {
     private Sound music;
     private Ball ball;
     private float interpolation;
+    private Rectangle shotRect;
+    private Rectangle ballRect;
 
     public Game(int width){
         this.setLayout(null);
@@ -41,14 +43,17 @@ public class Game extends JPanel {
         this.isShooting=false;
         this.music = new Sound(this.keyBoard);
         this.music.loadClip(Sound.INTRO);
-        playMusic();
+        //playMusic();
         this.ball =new Ball();
         this.instructions = new Instructions(Instructions.INSTRUCTION_WIDTH,Instructions.INSTRUCTION_HEIGHT, 140,100,this.keyBoard);
         this.instructions.setVisible(true);
         this.add(instructions);
         addStartButton();
 
-        checkKeyboardState();
+        this.ballRect = this.ball.getRectangleOfBall();
+        checkCollision();
+
+        //checkKeyboardState();
         this.setVisible(true);
 
     }
@@ -58,8 +63,6 @@ public class Game extends JPanel {
            this.shots.add(new Shot(this.cannon));
        }
     }
-
-
     private void createBackGround() {
         try {
             this.backGround = ImageIO.read(new File("models/backGround2.png"));
@@ -67,7 +70,6 @@ public class Game extends JPanel {
             e.printStackTrace();
         }
     }
-
     private void doRepaint(){
         new Thread(()->{
             while (true){
@@ -76,13 +78,11 @@ public class Game extends JPanel {
             }
         }).start();
     }
-
     public void playMusic(){
         new Thread(()->{
             while(!music.isTransitionDone()){
                 this.music.loop();
             }
-            //this.sound.loop();
         }).start();
     }
     public void createShot(){
@@ -104,33 +104,49 @@ public class Game extends JPanel {
         }).start();
     }
 
+    public void checkCollision(){
+        new Thread(()->{
+            while (true){
+                for (Shot shot:this.shots) {
+                  if(shot.getRectangleOfShot().y == this.ballRect.y){
+                      System.out.println("FUCKKK ASHKELONNN COLLEGEEEEEE");
+                  }  
+                    System.out.println(shot.getRectangleOfShot());;
+                    System.out.println(this.ballRect);
+                    System.out.println(  Utils.collision(shot.getRectangleOfShot(),this.ballRect));
+                }
+            }
+
+        }).start();
+    }
+
+
     public boolean isShooting() {
         return this.keyBoard.isStartShooting();
     }
-
     public void startShooting(){
         this.isShooting = this.keyBoard.isStartShooting();
     }
     public void stopShooting(){
         this.isShooting = false;
     }
-    public void checkKeyboardState(){
-        new Thread(()->{
-            while(true){
-                if (this.keyBoard.isHide()){
-                    try {
-                        System.out.println("shit");
-                        Thread.sleep(2000);
-                        System.out.println("shit2");
-                        this.instructions.setVisible(false);
-                        break;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }).start();
-    }
+//    public void checkKeyboardState(){
+//        new Thread(()->{
+//            while(true){
+//                if (this.keyBoard.isHide()){
+//                    try {
+//                        System.out.println("shit");
+//                        Thread.sleep(2000);
+//                        System.out.println("shit2");
+//                        this.instructions.setVisible(false);
+//                        break;
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            }
+//        }).start();
+//    }
     public void addStartButton(){
         this.start = new JButton();
         this.startIcon = new ImageIcon("images/instructions/start.png");
@@ -144,8 +160,6 @@ public class Game extends JPanel {
             this.start.setVisible(false);
             this.ball.move();
             new Thread(()->{
-                this.music.loadClip(Sound.TRANSITION);
-                this.music.loop();
                 this.instructions.addProgressBar();
                 this.instructions.fillProgressBar();
                 this.instructions.setVisible(false);
@@ -154,8 +168,7 @@ public class Game extends JPanel {
             //Utils.sleep(2000);
         }));
     }
-
-    public void render(float interpolation){
+    public void render(float interpolation) {
         this.interpolation = interpolation;
         this.repaint();
     }
