@@ -18,6 +18,8 @@ public class Shot extends Thread {
         this.cannon = cannon;
         direction();
 
+
+
 //checkState();
     }
 

@@ -50,6 +50,7 @@ public class Ball {
 
         this.moveThread = new Thread();
         this.moveThread.start();
+        this.rectangleOfBall = new Rectangle(this.xPosition,this.yPosition,this.width,this.height);
     }
 
     private void createXPosition(){
