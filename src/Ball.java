@@ -27,6 +27,7 @@ public class Ball {
 
     private JLabel numbers;
     private Rectangle rectangle;
+    private boolean isStart;
 
     public Ball(){
         createXPosition();
@@ -95,8 +96,12 @@ public class Ball {
     }
 
     public void move(){
-            moveUp();
-            moveDown();
+            new Thread(()->{
+                while (true){
+                    moveUp();
+                    moveDown();
+                }
+            }).start();
     }
 
 
