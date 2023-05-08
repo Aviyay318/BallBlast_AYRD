@@ -73,16 +73,20 @@ public class Game extends JPanel {
     private void doRepaint(){
         new Thread(()->{
             while (true){
-                try {
-                    Thread.sleep(120);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                this.repaint();
+               Utils.sleep(120);
+               this.repaint();
             }
         }).start();
     }
 
+    public void playMusic(){
+        new Thread(()->{
+            while(!music.isTransitionDone()){
+                this.music.loop();
+            }
+            //this.sound.loop();
+        }).start();
+    }
     public void createShot(){
         new Thread(()->{
             while (this.keyBoard.isStartShooting()){
@@ -99,8 +103,6 @@ public class Game extends JPanel {
                 }
             }
         }).start();
-
-
     }
 
     public boolean isShooting() {
