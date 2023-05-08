@@ -16,7 +16,15 @@ public class Game extends JPanel {
     private KeyBoard keyBoard;
     private  boolean isShooting;
     private List<Shot> shots;
+    private Instructions instructions;
+    private JButton start;
+    private Icon startIcon;
+    private Sound music;
+    private Ball ball;
+    private float interpolation;
+
     public Game(int width){
+        this.setLayout(null);
         this.width = width;
         this.height = height;
         this.setPreferredSize(new Dimension(width,height));
@@ -30,11 +38,25 @@ public class Game extends JPanel {
         this.requestFocus(true);
         this.addKeyListener(this.keyBoard);
         this.isShooting=false;
+
+        this.music = new Sound(this.keyBoard);
+        this.music.loadClip(Sound.INTRO);
+        playMusic();
+        this.ball = new Ball();
+        this.ball.move();
+        this.instructions = new Instructions(Instructions.INSTRUCTION_WIDTH,Instructions.INSTRUCTION_HEIGHT, 140,100,this.keyBoard);
+        this.instructions.setVisible(true);
+        this.add(instructions);
+        addStartButton();
+
+        checkKeyboardState();
+        this.setVisible(true);
+
     }
 
     private void createShotList() {
        for (int i=0;i<5;i++){
-           this.shots.add(new Shot(this.cannon,this));
+           this.shots.add(new Shot(this.cannon));
        }
     }
 
@@ -64,18 +86,14 @@ public class Game extends JPanel {
         new Thread(()->{
             while (this.keyBoard.isStartShooting()){
                 if (this.keyBoard.isStartShooting()){
-                    for (Shot shot1:shots) {
+                    for (Shot shot:shots) {
                         if (this.keyBoard.isStartShooting()){
-                            shot1.moveShot();
-                            shot1.updateShot();
+                            shot.moveShot();
+                            shot.updateShot();
                         }else {
                             break;
                         }
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                       Utils.sleep(500);
                     }
                 }
             }
@@ -94,6 +112,50 @@ public class Game extends JPanel {
     public void stopShooting(){
         this.isShooting = false;
     }
+    public void checkKeyboardState(){
+        new Thread(()->{
+            while(true){
+                if (this.keyBoard.isHide()){
+                    try {
+                        System.out.println("shit");
+                        Thread.sleep(2000);
+                        System.out.println("shit2");
+                        this.instructions.setVisible(false);
+                        break;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
+    }
+    public void addStartButton(){
+        this.start = new JButton();
+        this.startIcon = new ImageIcon("images/instructions/start.png");
+        this.start.setBounds(Instructions.INSTRUCTION_WIDTH/2+85,Instructions.INSTRUCTION_HEIGHT/3+300,this.startIcon.getIconWidth(),this.startIcon.getIconHeight());
+        this.start.setIcon(this.startIcon);
+        this.start.setOpaque(false);
+        this.start.setContentAreaFilled(false);
+        this.add(this.start);
+        this.start.setVisible(true);
+        this.start.addActionListener((e -> {
+            this.start.setVisible(false);
+            new Thread(()->{
+                this.music.loadClip(Sound.TRANSITION);
+                this.music.loop();
+                this.instructions.addProgressBar();
+                this.instructions.fillProgressBar();
+                this.instructions.setVisible(false);
+                this.music.loadClip(Sound.DURING);
+                this.music.loop();
+            }).start();
+        }));
+    }
+
+    public void render(float interpolation){
+        this.interpolation = interpolation;
+        this.repaint();
+    }
 
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
@@ -103,5 +165,6 @@ public class Game extends JPanel {
             shot1.drawShot(graphics2D);
         }
         this.cannon.draw(graphics2D);
+        this.ball.render(graphics2D,this.interpolation);
     }
 }

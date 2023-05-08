@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class Shot extends Thread {
@@ -7,13 +8,14 @@ public class Shot extends Thread {
     private Cannon cannon;
     private Game game;
 
-    public Shot(Cannon cannon, Game game){
+    public Shot(Cannon cannon){
         this.x =cannon.getCannonX()+40;
         this.y = Constants.CANNON_Y+10;
         //this.isShooting = isShooting;
         this.game = game;
         this.cannon = cannon;
         direction();
+
 //checkState();
     }
 
@@ -46,17 +48,17 @@ public class Shot extends Thread {
         this.isShooting = false;
     }
     private void direction(){
-//        new Thread(()->{
-//            while (true){
-//                System.out.println("work");
-//                this.x=this.cannon.getCannonX();
-//            }
-//        }).start();
 
     }
     public void run(){
         while (true){
-            System.out.println("ok");
+            while (this.y>-100){
+                this.y-=15;
+                Utils.sleep(100);
+            }
+            System.out.println("kj");
+            this.y= Constants.CANNON_Y;
+            System.out.println("say");
         }
     }
 public void updateShot(){
@@ -67,23 +69,21 @@ public void updateShot(){
         new Thread(()->{
             while (this.y>-100){
                 this.y-=15;
+
                // this.x=this.cannon.getCannonX();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                Utils.sleep(100);
             }
         }).start();
 
     }
+ private void moveS(){
 
+ }
 
     public void drawShot(Graphics2D graphics2D){
-                  //graphics2D.setColor(Color.orange);
-      //  if (this.game.isShooting()){
-            graphics2D.fillOval(this.x,this.y,20,20);
-      //  }
+            graphics2D.fillOval((this.cannon.getCannonX() + 40), this.y, 20, 20);
+
+
 
     }
 

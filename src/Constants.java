@@ -3,6 +3,7 @@ public class Constants {
     public static final int WIDTH = 900;
     public static final int CANNON_X = (Constants.WIDTH/2)-50;
     public static final int CANNON_Y = 740;
+    public static final String FILE_PATH ="score.txt";
 
 }
 

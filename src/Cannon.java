@@ -41,12 +41,14 @@ public void moveCannon(int x){
     }
 
     public void draw(Graphics2D graphics2D){
-    try {
-        this.cannon = ImageIO.read(new File("models/cannon.png"));
-    }catch (IOException e){
-        e.printStackTrace();
+        try {
+            this.cannon = ImageIO.read(new File("models/cannon.png"));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        graphics2D.drawImage(this.cannon,this.cannonX,Constants.CANNON_Y,100,100,null);
+
+
     }
-    graphics2D.drawImage(this.cannon,this.cannonX,Constants.CANNON_Y,100,100,null);
-}
 
 }
