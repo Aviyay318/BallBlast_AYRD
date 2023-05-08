@@ -10,6 +10,7 @@ import java.util.List;
 public class Game extends JPanel {
 
     private BufferedImage backGround;
+    private boolean isStart;
     private int width;
     private int height;
     private Cannon cannon;
@@ -38,12 +39,12 @@ public class Game extends JPanel {
         this.requestFocus(true);
         this.addKeyListener(this.keyBoard);
         this.isShooting=false;
-
+        this.isStart = false;
         this.music = new Sound(this.keyBoard);
         this.music.loadClip(Sound.INTRO);
         playMusic();
-        this.ball = new Ball();
-        this.ball.move();
+        this.ball =new Ball();
+        this.isStart = false;
         this.instructions = new Instructions(Instructions.INSTRUCTION_WIDTH,Instructions.INSTRUCTION_HEIGHT, 140,100,this.keyBoard);
         this.instructions.setVisible(true);
         this.add(instructions);
@@ -140,6 +141,8 @@ public class Game extends JPanel {
         this.start.setVisible(true);
         this.start.addActionListener((e -> {
             this.start.setVisible(false);
+            this.isStart = true;
+            this.ball.move();
             new Thread(()->{
                 this.music.loadClip(Sound.TRANSITION);
                 this.music.loop();
@@ -161,10 +164,12 @@ public class Game extends JPanel {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
         graphics2D.drawImage(this.backGround,0,0,Constants.WIDTH,Constants.HEIGHT,null);
-        for (Shot shot1:shots) {
-            shot1.drawShot(graphics2D);
+        if (this.isStart){
+            this.ball.render(graphics2D,this.interpolation);
+            for (Shot shot1:shots) {
+                shot1.drawShot(graphics2D);
+            }
+            this.cannon.draw(graphics2D);
         }
-        this.cannon.draw(graphics2D);
-        this.ball.render(graphics2D,this.interpolation);
     }
 }
