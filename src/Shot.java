@@ -7,11 +7,13 @@ public class Shot extends Thread {
     private  boolean isShooting;
     private Cannon cannon;
     private Game game;
+    private boolean keepGoing;
 
     public Shot(Cannon cannon){
         this.x =cannon.getCannonX()+40;
         this.y = Constants.CANNON_Y+10;
         //this.isShooting = isShooting;
+        this.keepGoing = true;
         this.game = game;
         this.cannon = cannon;
         direction();
